@@ -6,7 +6,7 @@
 /*   By: nisciane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:07:53 by nisciane          #+#    #+#             */
-/*   Updated: 2025/01/15 15:34:43 by nisciane         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:47:11 by nisciane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <unistd.h>
@@ -51,6 +51,15 @@ void	ft_putnbr(int n)
 		ft_putchar(n % 10 + '0');
 	}
 }
+
+void	ft_putuint(unsigned int n)
+{
+	printf("coucou");
+	if (n > 0 && n < 2147483647)
+	{
+		ft_putnbr(n);
+	}
+}
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -76,35 +85,6 @@ int	length_of(int n)
 	return (len);
 }
 
-/*char	*ft_itoa(int n)
-{
-	int		len;
-	char	*res;
-	long	num;
-
-	num = n;
-	len = length_of(n);
-	res = malloc(sizeof(char) * len + 1);
-	if (!res)
-		return (NULL);
-	if (num < 0)
-	{
-		res[0] = '-';
-		num = -num;
-	}
-	else if (num == 0)
-	{
-		res[0] = '0';
-	}
-	res[len] = '\0';
-	while (num != 0)
-	{
-		res[--len] = (num % 10) + '0';
-		num /= 10;
-	}
-	return (res);
-}*/
-
 int	ft_printf(const char *format, ...)
 {
 	va_list list;
@@ -113,8 +93,9 @@ int	ft_printf(const char *format, ...)
 	char 	char_to_print;
 	int	dec_num_to_print;
 	int	len_of_format;
-	len_of_format = ft_strlen(format);
+	unsigned int	uint_to_print;
 
+	len_of_format = ft_strlen(format);
 	while (*format != '\0')
 	{
 		if (*format == '%')
@@ -151,10 +132,15 @@ int	ft_printf(const char *format, ...)
 				len_of_format += length_of(dec_num_to_print);
 
 			}
-			else if (*format == 'u')
+			/*else if (*format == 'u')
 			{
-
-			}
+				format++;
+				uint_to_print = va_arg(list, unsigned int);
+				ft_putuint(uint_to_print);
+				len_of_format -= 2;
+				len_of_format += length_of(uint_to_print);
+					
+			}*/
 		}
 		ft_putchar(*format);
 		format++;
@@ -162,13 +148,12 @@ int	ft_printf(const char *format, ...)
 	va_end(list);
 	return (len_of_format);
 }
-/*int	main(void)
+int	main(void)
 {
-	char *test1 = "hello %s, I'm %d";
-	char *arg1 = "Julie";
-	int	arg2 = 2;
-	printf("test my function %d \n", ft_printf(test1, arg1, arg2));
-	printf("test c function %d", printf(test1, arg1, arg2));
+	char *test1 = "hello %c";
+	char arg1 = 'j';
+	int	arg2 = 2147483647;
+	printf("test my function : len  = %d \n", ft_printf(test1, arg1));
+	printf("test c function %d", printf(test1, arg1));
 }
-*/
 
