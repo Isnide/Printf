@@ -6,7 +6,7 @@
 /*   By: nisciane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:07:53 by nisciane          #+#    #+#             */
-/*   Updated: 2025/01/15 15:12:30 by nisciane         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:34:43 by nisciane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <unistd.h>
@@ -14,14 +14,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int	ft_putchar(c)
+void	ft_putchar(c)
 {
-	int	len;
-	len = 0;
-
 	write(1, &c, 1);
-	len++;
-	return (len);
 }
 
 void	ft_putstr(const char *str)
@@ -66,15 +61,56 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-void	ft_putuint(unsigned int n)
+int	length_of(int n)
 {
-	
+	int	len;
+
+	len = 0;
+	if (n <= 0)
+		len = 1;
+	while (n != 0)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
 }
+
+/*char	*ft_itoa(int n)
+{
+	int		len;
+	char	*res;
+	long	num;
+
+	num = n;
+	len = length_of(n);
+	res = malloc(sizeof(char) * len + 1);
+	if (!res)
+		return (NULL);
+	if (num < 0)
+	{
+		res[0] = '-';
+		num = -num;
+	}
+	else if (num == 0)
+	{
+		res[0] = '0';
+	}
+	res[len] = '\0';
+	while (num != 0)
+	{
+		res[--len] = (num % 10) + '0';
+		num /= 10;
+	}
+	return (res);
+}*/
+
 int	ft_printf(const char *format, ...)
 {
 	va_list list;
 	va_start(list, format);
 	char *string_to_print;
+	char 	char_to_print;
 	int	dec_num_to_print;
 	int	len_of_format;
 	len_of_format = ft_strlen(format);
@@ -90,7 +126,15 @@ int	ft_printf(const char *format, ...)
 				ft_putchar('%');
 				len_of_format -= 1;
 			}
-			else if (*format == 'c' || *format == 's')
+			else if (*format == 'c')
+			{
+				format++;
+				char_to_print = va_arg(list, int);
+				ft_putchar(char_to_print);
+				len_of_format -= 1;
+
+			}
+			else if (*format == 's')
 			{	
 				format++;
 				string_to_print = va_arg(list, char*);
@@ -104,22 +148,27 @@ int	ft_printf(const char *format, ...)
 				dec_num_to_print = va_arg(list, int);
 				ft_putnbr(dec_num_to_print);
 				len_of_format -= 2;
-				printf("coucou %d",ft_putnbr(dec_num_to_print));
+				len_of_format += length_of(dec_num_to_print);
+
+			}
+			else if (*format == 'u')
+			{
+
 			}
 		}
 		ft_putchar(*format);
 		format++;
 	}
 	va_end(list);
-	printf("%d", len_of_format);
 	return (len_of_format);
 }
-int	main(void)
+/*int	main(void)
 {
 	char *test1 = "hello %s, I'm %d";
-	char *arg1 = "Jul";
-	int	arg2 = 26;
-	ft_printf(test1, arg1, arg2);
+	char *arg1 = "Julie";
+	int	arg2 = 2;
+	printf("test my function %d \n", ft_printf(test1, arg1, arg2));
+	printf("test c function %d", printf(test1, arg1, arg2));
 }
-
+*/
 
