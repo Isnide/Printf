@@ -6,7 +6,7 @@
 /*   By: nisciane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:07:53 by nisciane          #+#    #+#             */
-/*   Updated: 2025/01/15 16:47:11 by nisciane         ###   ########.fr       */
+/*   Updated: 2025/01/29 19:14:25 by nisciane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <unistd.h>
@@ -54,12 +54,11 @@ void	ft_putnbr(int n)
 
 void	ft_putuint(unsigned int n)
 {
-	printf("coucou");
-	if (n > 0 && n < 2147483647)
-	{
-		ft_putnbr(n);
-	}
+	if (n >= 10)
+		ft_putnbr(n / 10);
+	ft_putchar(n % 10 + '0');
 }
+
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -84,7 +83,65 @@ int	length_of(int n)
 	}
 	return (len);
 }
+/*void	ft_putptr(intptr_t num)
+{
+	if (num >= 16)
+	{
+		ft_putptr(num / 16);
+		ft_putptr(num % 16);
+	}
+	else
+	{
+		if (num <= 9)
+			ft_putchar(num + '0');
+		else
+			ft_putchar(num - 10 + '0');
+	}
+}
+void	ft_printp(unsigned long long ptr)
+{
+	write(1, "0x", 2);
+	if (ptr == 0)
+		write(1, "0", 1);
 
+	else
+		ft_putptr(ptr);
+}
+*/
+void	ft_putadd_hex(unsigned long int nbr, char Xx)
+{
+	unsigned long int	base_len;
+	char   *base;
+
+	base_len = 16;
+	if (Xx == 'x')
+		base = "0123456789abcdef";
+	else
+		base = "0123456789ABCDEF";
+	if (nbr < base_len)
+		ft_putchar(base[nbr % base_len]);
+	else
+	{
+		ft_putadd_hex(nbr / base_len, Xx);
+		ft_putadd_hex(nbr % base_len, Xx);
+	}
+
+}
+void	ft_putadd(void *add)
+{
+	unsigned long int ptr;
+	ptr = (unsigned long int)add;
+
+	if (add == 0)
+	{
+		ft_putstr("(nil)");
+	}
+	else
+	{
+		ft_putstr("0x");
+		ft_putadd_hex(ptr, 'x');
+	}
+}
 int	ft_printf(const char *format, ...)
 {
 	va_list list;
@@ -94,6 +151,7 @@ int	ft_printf(const char *format, ...)
 	int	dec_num_to_print;
 	int	len_of_format;
 	unsigned int	uint_to_print;
+	void *p_to_print;
 
 	len_of_format = ft_strlen(format);
 	while (*format != '\0')
@@ -132,7 +190,7 @@ int	ft_printf(const char *format, ...)
 				len_of_format += length_of(dec_num_to_print);
 
 			}
-			/*else if (*format == 'u')
+			else if (*format == 'u')
 			{
 				format++;
 				uint_to_print = va_arg(list, unsigned int);
@@ -140,7 +198,16 @@ int	ft_printf(const char *format, ...)
 				len_of_format -= 2;
 				len_of_format += length_of(uint_to_print);
 					
-			}*/
+			}
+			else if (*format == 'p')
+			{
+				format++;
+				p_to_print = va_arg(list, unsigned long long);
+				ft_putadd(p_to_print);
+				len_of_format -= 2;
+				len_of_format += length_of(p_to_print);
+
+			}
 		}
 		ft_putchar(*format);
 		format++;
@@ -148,12 +215,18 @@ int	ft_printf(const char *format, ...)
 	va_end(list);
 	return (len_of_format);
 }
-int	main(void)
+/*int	main(void)
 {
 	char *test1 = "hello %c";
 	char arg1 = 'j';
-	int	arg2 = 2147483647;
-	printf("test my function : len  = %d \n", ft_printf(test1, arg1));
-	printf("test c function %d", printf(test1, arg1));
-}
+	char *test2 = "%u";
+	unsigned int uint_test;
+	uint_test = -1;
+	//int	arg2 = 2147483647;
+	//printf("test my function : len  = %d \n", ft_printf(test1, arg1));
+	//printf("test c function %d", printf(test1, arg1));
+	printf(test2, uint_test);
+	ft_printf(test2, uint_test);
+	printf("%p", -1);
+}*/
 
